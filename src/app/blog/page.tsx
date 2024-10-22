@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Shreyank Jadiya's Blog",
-  description: "Thoughts on Shopify Development, latest shopify features and web development techniques.",
+  description: "Articles on Shopify Development, latest shopify features and web development techniques to create the best web expereinces in the digital world..",
 };
 
 const BLUR_FADE_DELAY = 0.04;
@@ -15,7 +15,7 @@ export default async function BlogPage() {
   return (
     <section>
       <BlurFade delay={BLUR_FADE_DELAY}>
-        <h1 className="font-medium text-2xl mb-8 tracking-tighter">Shreyank Jadiya's Blog</h1>
+        <h1 className="font-medium text-2xl mb-8 tracking-tighter">Shreyank Jadiya's Articles</h1>
       </BlurFade>
       {posts
         .sort((a, b) => {
