@@ -4,6 +4,8 @@ import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
@@ -87,7 +89,11 @@ export default async function Blog({
             },
           }),
         }}
-      />
+      />    
+       <Link className="mb-4 flex flex-row items-center space-x-8 text-sm" href="/blog">
+        <ArrowLeft className="inline-block" size={12} /> Back to All Articles
+       </Link>
+      
       <h1 className="title font-medium text-2xl tracking-tighter max-w-[650px]">
         {post.metadata.title}
       </h1>

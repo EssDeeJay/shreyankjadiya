@@ -1,6 +1,7 @@
 import BlurFade from "@/components/magicui/blur-fade";
 import { getBlogPosts } from "@/data/blog";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
   title: "Shreyank Jadiya's Blog",
@@ -15,7 +16,12 @@ export default async function BlogPage() {
   return (
     <section>
       <BlurFade delay={BLUR_FADE_DELAY}>
-        <h1 className="font-medium text-2xl mb-8 tracking-tighter">Shreyank Jadiya's Articles</h1>
+       <Link className="mb-4 flex flex-row items-center space-x-8 text-sm" href="/">
+        <ArrowLeft className="inline-block" size={12} /> Back to Home
+       </Link>
+      </BlurFade>
+      <BlurFade delay={BLUR_FADE_DELAY}>
+        <h1 className="font-medium text-2xl lg:text-4xl mb-8 tracking-tighter">Shreyank Jadiya's Articles</h1>
       </BlurFade>
       {posts
         .sort((a, b) => {
