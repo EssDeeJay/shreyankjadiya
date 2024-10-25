@@ -1,0 +1,105 @@
+---
+title: "Tutorial on Shopify Remix App x MongoDB connection"
+publishedAt: "2024-10-25"
+summary: "A step by step tutorial on how to connect mongodb to the shopify remix app"
+---
+
+# How to Integrate MongoDB with Shopify Remix App - Step by Step Guide
+
+Howdy everyone ! I am back with the first technical article of my new looking site. In this article we will be going through how you can use MongoDB to integrate with your shopify remix app.
+
+Before we dive into the tutorial, a brief about why MongoDB and not the SQLITE. First of all, both follows different structures as MongoDB is a NoSQL database while the other is SQL database. The reason for using MongoDB is useful when you actually deploy your app to production. When you deploy your app to production, what happens is the instance on the server is running but the session on your SQLITE database will be reset in every time an instance restarts meaning, your database is reset every once in a while on your deployed server which is not ideal for production level apps. In production, we expect that the app remebers the session and do not erase the database while being idle. Recently, I faced such problems whereas the app was using SQLITE and after deploying to production, it was resetting the session after sometime meaning the database was getting erased and then getting the information after somebody interacts with the app. This is okay if your app is only an admin side app. While my app was using app proxies and required to be up all the time with the session info and all, this was not working for me and i was getting many errors while using the SQLITE database. That is why I have considered other options to integrate with the app and MongoDB seemed the easiest, staright forward and best way of integrating with Prisma and Remix app. Also, MongoDB atlas offers free clusters for the smaller apps that do not require too much of reading /writing data. But if your app does, I will highly recommend to go for the paid plan. For this tutorial, we will use the free plan from mongoDB. Let's dive in to the tutorial below.
+
+I am assuming you have already created the shopify remix app and have the barebones template with you running smoothly.
+If not, you can create the app easily using the command,
+
+`shopify app init`
+
+Make sure you have the Shopify CLI installed before executing this command. You can install Shopify CLI from [here](https://shopify.dev/docs/api/shopify-cli).
+
+Once you have followed the step of installation, run `shopify app dev` command to run it and click the preview link to install it on your development store. If everything goes well you should see the barebones remix app running on your development store. If you see the app console carefully, you will see the following messages from your console.
+
+![shopify app console information](https://shreyankjadiya.s3.us-east-2.amazonaws.com/ss_shopify_app.PNG)
+
+Currently your app is using the SQLITE database. You can check more information about your prisma configuration using your prisma folder in your app. It will have the files of schema.prisma,migrations folder that includes all your database migrations and dev sqlite file which has your database. You can use prisma to see your database and check how it works. But for our tutorial purposes we will be completely removing those files to integrate MongoDB. 
+
+you can turn off your dev server and delete the migrations folder and the dev sqlite file within the prisma folder. Now we will head to [MongoDB](https://www.mongodb.com/) and sign up for free cluster account if you dont have one. If you already have one you can skip this step. 
+
+Once signed up create a cluster and follow through the on screen prompts to create. Once your cluster is successfully created. You can connect it with your shopify app.
+
+To do so, click connect and it will popup the below modal.
+
+![mongodb connection modal](https://shreyankjadiya.s3.us-east-2.amazonaws.com/ss_mongo_connect.PNG)
+
+Click on drivers to get the connection string of MongoDB, It will be similar to `mongodb+srv://<username>:<db_password>@<appName>.qg521.mongodb.net/?retryWrites=true&w=majority&appName=<appName>`
+
+Head over to your local console and install mongodb with the command `npm install mongodb` . Once that is installed open your .env file and make a enviroment variable for your database URI called MONGO_URI. 
+
+Now headback to the MongoDB atlas portal to do some additional configuration to make sure everything will be working fine without any errors. First of all. open your cluster and create a separate collection apart from your default generated collection. Our app data will be stored in that collection. So choose name accordingly. Once that is done, headover to the network access tab in the sidebar under security. If you would like to have your database accessed from anywhere, make sure you insert this entry in the IP address. It should look like below.
+
+![mongodb_ip_configuration](https://shreyankjadiya.s3.us-east-2.amazonaws.com/ss_mongo_ip_config.PNG)
+
+You can also add your current IP and it will work fine, but if your IP is changing frequently you might see problem in connection. So, if your database is not critical, I would advise it to keep it accessed from anywhere. 
+
+Sweet, that was all needed on MongoDB atlas. Now headover back to the shopify app. We will need to check off few things before we can get this up and running. 
+
+First, we will need to change our prisma schema to append the new session_id parameter. MongoDB expects the parameter to come with "_id", it could be any name but it should have this unique parameter for it to create a new entry in the database. You can create something like,
+
+    datasource db {
+      provider = "mongodb"
+      url      = env("MONGODB_URI")
+    }
+        model Session {
+          session_id  String    @id @default(auto()) @map("_id") @db.ObjectId
+          id            String    @unique
+          shop          String
+          state         String
+          isOnline      Boolean   @default(false)
+          scope         String?
+          expires       DateTime?
+          accessToken   String
+          userId        BigInt?
+          firstName     String?
+          lastName      String?
+          email         String?
+          accountOwner  Boolean   @default(false)
+          locale        String?
+          collaborator  Boolean?  @default(false)
+          emailVerified Boolean?  @default(false)
+        }
+
+Notice how the session_id has the "_id" which is something MongoDB will like in their schema. Also, change your datasource db code to something like above which changes its provider  and the URL points to mongoDB.
+
+Great ! If you want to have new schema modals , you can explore prisma and mongodb documentation to create those in schema.prisma file and the app will do rest.
+
+Before we start our dev server again to verify our connection, one more thing needs to be changed and that is the configuration. You guessed it, right ?. Head over to shopify.web.toml file  and change your commands for dev to look like this.
+
+    [commands]
+    predev = "npx prisma generate"
+    dev = "npx prisma db push && npm exec remix vite:dev"
+
+predev command will generate the database whereas the dev command will push the prisma schema to the MongoDB database. If you dont update this you will errors like Prisma does not work with this command with MongoDB. it is because our previous database was SQLite and prisma have different commands for it.
+
+Once this is updated, You can successfully start your dev server for your app and see the app in action. Once the app server starts, you will see that your schema is being pushed with the messages as below.
+
+    13:46:11 │                     remix │ Applying the following changes:
+    13:46:11 │                     remix │
+    13:46:11 │                     remix │ [+] Collection `Session`
+    13:46:11 │                     remix │ [+] Unique index `Session_id_key` on ({"id":1})
+    13:46:11 │                     remix │
+    13:46:12 │                     remix │
+    13:46:12 │                     remix │ 🚀  Your database indexes are now in sync with your Prisma schema. Done in 1.00s
+    13:46:12 │                     remix │
+    13:46:12 │                     remix │ Running generate... (Use --skip-generate to skip the generators)
+    13:46:13 │                     remix │ Running generate... - Prisma Client
+    13:46:13 │                     remix │ ✔ Generated Prisma Client (v5.19.0) to ./node_modules/@prisma/client in 344ms
+
+Once that is there, visit your app in your test store and you will see the new session getting created message in your console. You can also headover to MongoDB atlas and check your collection for your app and you will see there will be the session modal with the data about your current shop. Sweet ! That confirms everything works with the database. Now your database is more production grade than it used to be.
+
+For production, before you try to deploy make sure you change the package.json file setup command to `"setup": "prisma db push"`  to make sure the deployment goes fine. If this is not changed you will see errors in your deployment.
+
+That was it. I hope this has helped you to some extent. If you still facing errors and would like to know more, DM me on email and i will try my best to answer as soon as i can.
+
+Thanks for reading. Onto the next one.
+
+Cheers🎉
