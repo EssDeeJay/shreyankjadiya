@@ -15,23 +15,38 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }): Promise<Metadata | undefined> {
-  let post = await getPost(params.slug);
+  const { slug } = await params;
+  let post;
+  try {
+    post = await getPost(slug);
+  } catch {
+    return undefined;
+  }
 
-  let {
+  const {
     title,
     publishedAt: publishedTime,
     summary: description,
     image,
   } = post.metadata;
-  let ogImage = image ? `${DATA.url}${image}` : `${DATA.url}/og?title=${title}`;
+  const ogImage = image
+    ? `${DATA.url}${image}`
+    : `${DATA.url}/og?title=${encodeURIComponent(title)}`;
 
   return {
     title,
     description,
+    authors: [{ name: DATA.name, url: DATA.url }],
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+      types: {
+        "text/markdown": `${DATA.url}/markdown/blog/${post.slug}`,
+      },
+    },
     openGraph: {
       title,
       description,
@@ -56,13 +71,15 @@ export async function generateMetadata({
 export default async function Blog({
   params,
 }: {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }) {
-  let post = await getPost(params.slug);
-
-  if (!post) {
+  const { slug } = await params;
+  let post;
+  try {
+    post = await getPost(slug);
+  } catch {
     notFound();
   }
 
@@ -74,20 +91,53 @@ export default async function Blog({
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: post.metadata.title,
-            datePublished: post.metadata.publishedAt,
-            dateModified: post.metadata.publishedAt,
-            description: post.metadata.summary,
-            image: post.metadata.image
-              ? `${DATA.url}${post.metadata.image}`
-              : `${DATA.url}/og?title=${post.metadata.title}`,
-            url: `${DATA.url}/blog/${post.slug}`,
-            author: {
-              "@type": "Person",
-              name: DATA.name,
-            },
-          }),
+            "@graph": [
+              {
+                "@type": "BlogPosting",
+                headline: post.metadata.title,
+                datePublished: post.metadata.publishedAt,
+                dateModified: post.metadata.publishedAt,
+                description: post.metadata.summary,
+                image: post.metadata.image
+                  ? `${DATA.url}${post.metadata.image}`
+                  : `${DATA.url}/og?title=${encodeURIComponent(post.metadata.title)}`,
+                url: `${DATA.url}/blog/${post.slug}`,
+                mainEntityOfPage: `${DATA.url}/blog/${post.slug}`,
+                inLanguage: "en-CA",
+                author: {
+                  "@type": "Person",
+                  "@id": `${DATA.url}/#person`,
+                  name: DATA.name,
+                  url: DATA.url,
+                },
+                publisher: { "@id": `${DATA.url}/#person` },
+                isPartOf: { "@id": `${DATA.url}/blog#blog` },
+              },
+              {
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  {
+                    "@type": "ListItem",
+                    position: 1,
+                    name: "Home",
+                    item: DATA.url,
+                  },
+                  {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: "Blog",
+                    item: `${DATA.url}/blog`,
+                  },
+                  {
+                    "@type": "ListItem",
+                    position: 3,
+                    name: post.metadata.title,
+                    item: `${DATA.url}/blog/${post.slug}`,
+                  },
+                ],
+              },
+            ],
+          }).replace(/</g, "\\u003c"),
         }}
       />    
        <Link className="mb-4 flex flex-row items-center space-x-8 text-sm" href="/blog">
@@ -99,9 +149,12 @@ export default async function Blog({
       </h1>
       <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
         <Suspense fallback={<p className="h-5" />}>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          <time
+            dateTime={post.metadata.publishedAt}
+            className="text-sm text-neutral-600 dark:text-neutral-400"
+          >
             {formatDate(post.metadata.publishedAt)}
-          </p>
+          </time>
         </Suspense>
       </div>
       <article

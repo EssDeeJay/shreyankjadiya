@@ -1,32 +1,48 @@
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { DATA } from "@/data/resume";
-import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
-
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(DATA.url),
+  metadataBase: new URL(SITE.url),
+  applicationName: SITE.name,
   title: {
-    default: DATA.name,
-    template: `%s | ${DATA.name}`,
+    default: SITE.title,
+    template: `%s | ${SITE.name}`,
   },
-  description: "Full stack web developer located in toronto. With over 5 years of solid experience in building end to end ecommerce solutions for clients, I specialize in Shopify/Shopify Plus Website Development. If you are looking to build your shopify store or just want to enhance the website performance of your shopify site, I can help.",
+  description: SITE.description,
+  keywords: [...SITE.keywords],
+  authors: [{ name: SITE.name, url: SITE.url }],
+  creator: SITE.name,
+  publisher: SITE.name,
+  category: "technology",
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": `${SITE.url}/feed.xml`,
+      "text/markdown": `${SITE.url}/profile.md`,
+    },
+  },
   openGraph: {
-    title: `${DATA.name}`,
-    description: DATA.description,
-    url: DATA.url,
-    siteName: `${DATA.name}`,
-    locale: "en_US",
-    type: "website",
+    title: SITE.title,
+    description: SITE.description,
+    url: SITE.url,
+    siteName: SITE.name,
+    locale: SITE.locale,
+    type: "profile",
+    firstName: SITE.firstName,
+    lastName: "Jadiya",
+    images: [
+      {
+        url: "/og",
+        width: 1200,
+        height: 630,
+        alt: `${SITE.name} — Shopify Plus and full-stack developer`,
+      },
+    ],
   },
   robots: {
     index: true,
@@ -40,13 +56,13 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: `${DATA.name}`,
+    title: SITE.title,
+    description: SITE.description,
     card: "summary_large_image",
+    creator: "@shreyankjadiya",
+    images: ["/og"],
   },
-  verification: {
-    google: "",
-    yandex: "",
-  },
+  formatDetection: { email: false, address: false, telephone: false },
 };
 
 export default function RootLayout({
@@ -56,12 +72,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased max-w-2xl mx-auto py-12 sm:py-24 px-6",
-          fontSans.variable
-        )}
-      >
+      <head>
+        <link rel="describedby" href="/llms.txt" />
+      </head>
+      <body className="min-h-screen bg-background font-sans antialiased max-w-2xl mx-auto py-12 sm:py-24 px-6">
         <ThemeProvider attribute="class" defaultTheme="light">
           <TooltipProvider delayDuration={0}>
             {children}

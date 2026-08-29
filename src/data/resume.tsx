@@ -1,16 +1,16 @@
 import { Icons } from "@/components/icons";
+import { SITE } from "@/lib/site";
 import { HomeIcon, NotebookIcon } from "lucide-react";
 
 export const DATA = {
-  name: "Shreyank Jadiya",
+  name: SITE.name,
   initials: "SJ",
-  url: "https://shreyankjadiya.com",
-  location: "Toronto,ON",
+  url: SITE.url,
+  location: SITE.location,
   locationLink: "https://www.google.com/maps/place/Toronto,+ON,+Canada/@43.7182412,-79.3780581,11z/data=!3m1!4b1!4m6!3m5!1s0x89d4cb90d7c63ba5:0x323555502ab4c477!8m2!3d43.653226!4d-79.3831843!16zL20vMGg3aDY?entry=ttu&g_ep=EgoyMDI0MTAwMi4xIKXMDSoASAFQAw%3D%3D",
-  description:
-    "Leader | Full Stack Developer | Shopify Expert",
+  description: SITE.profileDescription,
   summary:
-    "Mission-Driven Full-stack Web Developer with a passion for thoughtful UI Design, collaboration, and refactoring of code. Started my web development journey while pursuing my masters degree at university. I am a self taught developer who learned from own experiences and mistakes. I started my joureny as a contractor in web development and after 4 years of contracting and constant learning finally ended up in a dream company Umbra. Umbra boosted my career in a way where i learned a lot about how the development and testing of the websites work. I have successfully managed more than 10 shopify plus storefronts while working at a umbra in parallel. I used technology stacks such as Shopify's liquid, NodeJS, ReactJS, Nextjs, Remix,etc with SQL Databases. After 3 Solid years at umbra, I changed my career to be in a more challenging role at Greenworks Tools Where my primary task was to completely revamp and integrate the old fashioned shopify store to brand new conervsion optimized website. Currently building systems that supports various use cases at Greenworks Tools. Also, I have started my own digital agency in 2022 to help clients to scale and grow and to help with their development needs. Owner of shopify development agency at, [The SJ Development](https://www.thesjdevelopment.com)",
+    "I am a mission-driven full-stack developer focused on thoughtful UI, maintainable code, and high-performing ecommerce experiences. Since beginning my web development career in Toronto, I have built and managed Shopify and Shopify Plus storefronts using Liquid, Node.js, React, Next.js, Remix, and SQL.\n\nMy work includes storefront redesigns, custom Shopify apps, B2B experiences, and integrations with systems such as Salesforce and SAP. I also run [The SJ Development](https://www.thesjdevelopment.com), a Shopify development agency that helps growing brands improve and scale their digital commerce.",
   avatarUrl: "/me.jpg",
   skills: [
     "Shopify",
@@ -91,7 +91,7 @@ export const DATA = {
       start: "Aug 2020",
       end: "Nov 2023",
       description:
-        "Implemented a custom Kubernetes controller in Go to automate the deployment of MySQL and ProxySQL custom resources in order to enable 2,000+ internal developers to instantly deploy their app databases to production. Wrote several scripts in Go to automate MySQL database failovers while maintaining master-slave replication topologies and keeping Zookeeper nodes consistent with changes.",
+        "Built, maintained, and optimized Shopify Plus storefronts across Umbra's international ecommerce portfolio. Developed custom themes and features, improved storefront performance and conversion experiences, and supported reliable development and testing workflows.",
     },
     {
       company: "The SJ Development",

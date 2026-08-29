@@ -8,22 +8,92 @@ import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
+import { SITE } from "@/lib/site";
 
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
+  const profileJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfilePage",
+        "@id": `${SITE.url}/#profile`,
+        url: SITE.url,
+        name: SITE.title,
+        description: SITE.description,
+        inLanguage: "en-CA",
+        mainEntity: { "@id": `${SITE.url}/#person` },
+      },
+      {
+        "@type": "Person",
+        "@id": `${SITE.url}/#person`,
+        name: SITE.name,
+        url: SITE.url,
+        image: `${SITE.url}/me.jpg`,
+        email: `mailto:${SITE.email}`,
+        jobTitle: SITE.jobTitle,
+        description: SITE.profileDescription,
+        homeLocation: {
+          "@type": "Place",
+          name: SITE.location,
+        },
+        sameAs: SITE.sameAs,
+        knowsAbout: [
+          "Shopify Plus",
+          "Shopify app development",
+          "Ecommerce architecture",
+          "Full-stack web development",
+          "Liquid",
+          "React",
+          "Next.js",
+          "Remix",
+          "Node.js",
+          "Web performance",
+        ],
+        alumniOf: {
+          "@type": "CollegeOrUniversity",
+          name: "University of Windsor",
+          url: "https://www.uwindsor.ca",
+        },
+        worksFor: {
+          "@type": "Organization",
+          name: "Greenworks Tools",
+          url: "https://greenworkstools.ca",
+        },
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE.url}/#website`,
+        url: SITE.url,
+        name: SITE.name,
+        description: SITE.description,
+        inLanguage: "en-CA",
+        publisher: { "@id": `${SITE.url}/#person` },
+      },
+    ],
+  };
+
   return (
     <main className="flex flex-col min-h-[100dvh] space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(profileJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <section id="hero">
         <div className="mx-auto w-full max-w-2xl space-y-8">
           <div className="gap-2 flex justify-between">
             <div className="flex-col flex flex-1 space-y-1.5">
-              <BlurFadeText
-                delay={BLUR_FADE_DELAY}
-                className="text-3xl font-bold tracking-tighter sm:text-4xl xl:text-5xl/none"
-                yOffset={8}
-                text={`Hi, I'm ${DATA.name.split(" ")[0]} 👋`}
-              />
+              <h1>
+                <BlurFadeText
+                  delay={BLUR_FADE_DELAY}
+                  className="text-3xl font-bold tracking-tighter sm:text-4xl xl:text-5xl/none"
+                  yOffset={8}
+                  text={`Hi, I'm ${DATA.name.split(" ")[0]} 👋`}
+                />
+              </h1>
               <BlurFadeText
                 className="max-w-[600px] md:text-xl"
                 delay={BLUR_FADE_DELAY}
@@ -41,12 +111,12 @@ export default function Page() {
       </section>
       <section id="about">
         <BlurFade delay={BLUR_FADE_DELAY * 3}>
-          <h2 className="text-xl font-bold">More about myself..</h2>
+          <h2 className="text-xl font-bold">About Shreyank Jadiya</h2>
         </BlurFade>
         <BlurFade delay={BLUR_FADE_DELAY * 4}>
-          <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
-            {DATA.summary}
-          </Markdown>
+          <div className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
+            <Markdown>{DATA.summary}</Markdown>
+          </div>
         </BlurFade>
       </section>
       <section id="work">
