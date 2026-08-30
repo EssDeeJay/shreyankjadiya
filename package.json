@@ -2,9 +2,9 @@
   "name": "shreyank-jadiya",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "pnpm@11.17.0",
+  "packageManager": "pnpm@9.15.9",
   "engines": {
-    "node": ">=20.9.0"
+    "node": "20.x"
   },
   "scripts": {
     "dev": "next dev",
@@ -50,5 +50,18 @@
     "postcss": "^8.5.26",
     "tailwindcss": "^3.4.17",
     "typescript": "^6.0.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "@babel/runtime": "7.29.7",
+      "glob": "10.5.0",
+      "js-yaml": "3.15.1",
+      "mdast-util-to-hast": "13.2.1",
+      "micromatch": "4.0.8",
+      "minimatch": "9.0.7",
+      "picomatch": "2.3.2",
+      "unified": "11.0.5",
+      "yaml": "2.8.3"
+    }
   }
 }
