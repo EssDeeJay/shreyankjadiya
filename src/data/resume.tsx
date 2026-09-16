@@ -154,6 +154,65 @@ export const DATA = {
   ],
   projects: [
     {
+      title: "Square Flower",
+      href: "https://www.squareflower.com/",
+      dates: "",
+      active: true,
+      description:
+        "Completely revamped Square Flower's website from scratch using a fresh Shopify theme, rebuilding the storefront for the organic bedding brand.",
+      technologies: ["Shopify", "Theme Development", "Storefront Redesign"],
+      links: [
+        {
+          type: "Website",
+          href: "https://www.squareflower.com/",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "/squareflower_project.jpg",
+      video: "/squareflower_project.mp4",
+    },
+    {
+      title: "Maison Bouquet",
+      href: "https://maisonbouquet.ca/",
+      dates: "",
+      active: true,
+      description:
+        "Built Maison Bouquet's storefront from scratch using a Shopify theme, with custom pickup and local delivery functionality alongside bouquet subscriptions.",
+      technologies: ["Shopify", "Theme Development", "Pickup & Local Delivery", "Subscriptions"],
+      links: [
+        {
+          type: "Website",
+          href: "https://maisonbouquet.ca/",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "/maisonbouquet_project.jpg",
+      video: "/maisonbouquet_project.mp4",
+    },
+    {
+      title: "Harlow Properties",
+      href: "https://www.harlowproperties.ca/",
+      dates: "",
+      active: true,
+      description:
+        "Extended Harlow Properties' Webflow website with a live rental availability CMS and a dedicated availability page, helping visitors browse current apartment listings.",
+      technologies: ["Webflow", "CMS", "Live Rental Availability"],
+      links: [
+        {
+          type: "Website",
+          href: "https://www.harlowproperties.ca/",
+          icon: <Icons.globe className="size-3" />,
+        },
+        {
+          type: "Live Availability",
+          href: "https://www.harlowproperties.ca/available-rentals",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "/harlowproperties_project.jpg",
+      video: "/harlowproperties_project.mp4",
+    },
+    {
       title: "Greenworks Commercial",
       href: "https://www.greenworkscommercial.ca/",
       dates: "Jul 2024 - Oct 2024",

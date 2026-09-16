@@ -17,7 +17,7 @@ export function renderProfileMarkdown() {
   const projects = DATA.projects
     .map(
       (project) =>
-        `### ${project.title}\n\n${project.description}\n\n- Period: ${project.dates}\n- Technologies: ${project.technologies.join(", ")}\n- Website: ${project.href}`,
+        `### ${project.title}\n\n${project.description}\n\n${project.dates ? `- Period: ${project.dates}\n` : ""}- Technologies: ${project.technologies.join(", ")}\n- Website: ${project.href}`,
     )
     .join("\n\n");
 
