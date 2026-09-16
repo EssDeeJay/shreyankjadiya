@@ -16,6 +16,10 @@ Built with next.js, [shadcn/ui](https://ui.shadcn.com/), and [magic ui](https://
 
 # Getting Started Locally
 
+Use Node.js 24.x and pnpm 9.15.9 (the version specified in `package.json`).
+If you use nvm, run `nvm install` and `nvm use` in the project directory.
+Vercel uses the Node.js 24.x runtime specified in `package.json` for new deployments.
+
 1. Clone this repository to your local machine:
 
    ```bash
